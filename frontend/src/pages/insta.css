@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html ,body {
+  font-family: "PT Sans";
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #000;
+  line-height: 1.6;
+}
+
+/* home */
+
+.insta-Home-container{
+    min-height: 100vh;
+    width: 100%;
+    background: #000;
+    color: white;
+    padding: 0 4vw;
+  }
+  
+  .title{
+    font-family:"Quicksand";
+    font-size: 3vw;
+    margin-top: 4vw;
+  }
+
+  .navbar{
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+  }
+  
+  nav h1{
+    font-weight: 300;
+  }
+  
+  .nav-link{
+    color: white;
+    display: flex;
+    gap: 2vw;
+  }
+  
+  .nav-link a{
+    text-decoration: none;
+    color: white;
+  }
+  
+  .nav-link .nav-btn{
+    border:1px solid white;
+    padding: 4px 1vw;
+    border-radius: 15px;
+    font-size: 15px;
+    cursor: pointer;
+    background-color: transparent;
+    transition: ease-in-out 0.2s; 
+    color: #fff;
+  }
+  
+  .nav-link .nav-btn:hover{
+    background-color: white;
+    color: black;
+    transition: ease-in-out 0.2s;
+  }
+
+  .input-container{
+    margin-top: 3vw;
+  }
+
+.input-container p{
+    font-size: 1.5vw;
+    color: white;
+}
+
+.input-button:hover{
+  cursor: pointer;
+}
+
+.insta-input{
+    width: 27vw;
+    background: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    height: 4vh;
+    text-decoration: none;
+    outline: none;
+    color: rgb(161, 159, 159);
+    padding: 15px 15px;
+    font-size: 16px;
+}
+
+.input-button{
+  background: white;
+  margin-left: 2vw;
+  color: black;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-family: "Quicksand";
+  font-weight: 500;
+}
+
+.instaProfileData-Container {
+  margin-top: 1vw;
+  margin-bottom: 2vw;
+  padding: 20px;
+  background: #dddbdb;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-data h2,
+.profile-data p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.posts-container {
+  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.post-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  text-align: center;
+}
+
+.post-card a {
+  text-decoration: none;
+}
+
+.post-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.post-caption {
+  font-size: 14px;
+  color: #555;
+  padding: 10px;
+}
+
+.profile-data h2{
+  color:black
+}
+
+.profile-data p{
+  color: #000;
+}
+
+
+.profile-data h3{
+  color: #000;
+}
+
+/* amazon css */
+
+.product-data {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.product-item {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgb(0, 0, 0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-item:hover {
+  transform: translateY(-5px);
+}
+
+.product-code {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #1e1e1e;
+  color: #f8f8f2;
+  padding: 10px;
+  border-radius: 5px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.product-code code {
+  color: #50fa7b;
+}
+
+.product-code span {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.youtube-data {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.channel-info,
+.video-details {
+  margin-bottom: 30px;
+}
+
+.video-item {
+  background-color: #2e2e2e;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  margin-bottom: 10px;
+}
+
+pre {
+  background-color: #333;
+  color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Movie Data Styling */
+.movie-data {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+.movie-data h2 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.movie-data p {
+  font-size: 16px;
+  color: #34495e;
+  line-height: 1.5;
+  margin: 5px 0;
+}
+
+.movie-data ul {
+  margin: 10px 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.movie-data li {
+  font-size: 16px;
+  color: #2c3e50;
+  margin: 5px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .insta-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .input-button {
+    width: 100%;
+  }
+}

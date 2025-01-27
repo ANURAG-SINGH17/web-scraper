@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+/* src/App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html ,body {
+  font-family: "PT Sans";
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* home */
+
+.home{
+  min-height: 100vh;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 0 4vw;
+  color: #000;
+}
+
+nav{
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav h1{
+  font-weight: 300;
+}
+
+.nav-link-2{
+  color: #000;
+  display: flex;
+  gap: 2vw;
+}
+
+.nav-link-2 a{
+  text-decoration: none;
+  color: #000;
+  text-decoration: underline;
+}
+
+.nav-btn{
+  border:1px solid black;
+  padding: 4px 1vw;
+  border-radius: 15px;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: ease-in-out 0.2s; 
+  color: #000;
+}
+
+.nav-btn:hover{
+  background-color: #000;
+  color: #fff;
+  transition: ease-in-out 0.2s;
+  cursor: pointer;
+}
+
+.hero{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.hero-content{
+  margin-top: 10vw;
+  width: 40%;
+  font-size: 4vw;
+  line-height: 4.5vw;
+  font-weight: 200;
+  font-family: "Quicksand";
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-content2{
+  font-family: "Quicksand";
+  font-weight: 500;
+  font-size: 1.3vw;
+  text-align: center;
+}
+
+.hero-button{
+  width: 100%;
+  margin-top: 3vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3vw;
+}
+
+.hero-button button{
+  font-family:"PT Sans";
+  border: 1px solid black;
+  font-size: 1.2vw;
+  padding: 7px 26px;
+  border-radius: 20px;
+  background: none;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+
+.hero-button button:hover{
+  background-color: #000;
+  color: white;
+  transition: ease-in-out 0.3s;
+}
+
+.input-button:hover{
+  cursor: pointer;
+}
+/* circle */
+
+.r1{
+  position: relative;
+}
+
+.circle1{
+  position: absolute;
+  background: #000;
+  border-radius: 50%;
+  height: 0px;
+  width: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.circle2{
+  position: absolute;
+  background: #000;
+  border-radius: 50%;
+  height: 0px;
+  width: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.circle3{
+  position: absolute;
+  background: #000;
+  border-radius: 50%;
+  height: 0px;
+  width: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.circle4{
+  position: absolute;
+  background: #000;
+  border-radius: 50%;
+  height: 0px;
+  width: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* instaHome */
+
+.insta-Home{
+  height: 100vh;
+  width: 100%;
+  background: #000;
+  color: white;
+}
+
+.title{
+  font-family:"Quicksand";
+  font-size: 3vw;
+}
