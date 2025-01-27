@@ -29,7 +29,7 @@ const AmazonPage = () => {
     setLoading(true); // Show loader
     try {
       const response = await axios.post(
-        "http://localhost:4000/scraper/amazon-product",
+        `${import.meta.env.VITE_BASE_URL}/scraper/amazon-product`,
         { query: query }
       );
 

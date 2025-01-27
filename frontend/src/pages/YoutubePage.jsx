@@ -31,7 +31,7 @@ const YoutubePage = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:4000/scraper/YouTubeChannel',
+        `${import.meta.env.VITE_BASE_URL}/scraper/YouTubeChannel`,
         { channelUrl: channelUrl }
       );
 

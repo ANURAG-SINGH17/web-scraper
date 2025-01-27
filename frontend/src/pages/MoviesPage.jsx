@@ -31,7 +31,7 @@ const MoviesPage = () => {
     setIsLoading(true); // Start loading spinner
 
     try {
-      const response = await axios.post('http://localhost:4000/scraper/movie', {
+      const response = await axios.post( `${import.meta.env.VITE_BASE_URL}/scraper/movie`, {
         movieUrl: movieUrl,
       });
 

@@ -33,7 +33,7 @@ const InstagramPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/scraper/instagram-profile",
+        `${import.meta.env.VITE_BASE_URL}/scraper/instagram-profile`,
         { profileUrl: profileUrl }
       );
 
