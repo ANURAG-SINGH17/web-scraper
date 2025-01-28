@@ -1,9 +1,6 @@
-const config = require("../config/config");
 const axios = require('axios')
 const cheerio = require('cheerio')
-const puppeteer = require("puppeteer-extra");
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-puppeteer.use(StealthPlugin()); // Bypass bot detection
+const puppeteer = require("puppeteer");
 
 // module.exports.scrapeInstagramProfile = async (req, res) => {
 //     const { profileUrl } = req.body;
@@ -109,43 +106,23 @@ module.exports.scrapeInstagramProfile = async (req, res) => {
         return res.status(400).json({ message: "Please provide a valid Instagram profile URL." });
     }
 
-    let browser;
+    const browser = await puppeteer.launch({
+        headless: "new", // Use 'new' for better compatibility
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(), // Set Render-compatible path
+    });
+
+    const page = await browser.newPage();
+
     try {
-        browser = await puppeteer.launch({
-            headless: "new", // Use 'new' mode for better stability on Render
-            args: [
-                "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-gpu",
-                "--disable-dev-shm-usage",
-                "--disable-accelerated-2d-canvas",
-            ],
-            executablePath: require("puppeteer").executablePath(),
-        });
-
-        const page = await browser.newPage();
-
-        // Set a custom user agent to avoid detection
         await page.setUserAgent(
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         );
 
-        // Block images and CSS to speed up loading
-        await page.setRequestInterception(true);
-        page.on("request", (request) => {
-            if (["image", "stylesheet", "font"].includes(request.resourceType())) {
-                request.abort();
-            } else {
-                request.continue();
-            }
-        });
-
         await page.goto(profileUrl, { timeout: 60000, waitUntil: "domcontentloaded" });
 
-        // Wait for profile section
-        await page.waitForSelector("header section", { timeout: 20000 });
+        await page.waitForSelector("header section");
 
-        // Scrape profile data
         const profileData = await page.evaluate(() => {
             const getText = (selector) =>
                 document.querySelector(selector)?.textContent.trim() || "N/A";
@@ -157,11 +134,6 @@ module.exports.scrapeInstagramProfile = async (req, res) => {
             };
         });
 
-        // Scroll to load posts
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-
-        // Scrape post details
         const postDetails = await page.evaluate(() => {
             const posts = [];
             document.querySelectorAll("article a").forEach((post, index) => {
@@ -178,18 +150,19 @@ module.exports.scrapeInstagramProfile = async (req, res) => {
 
         await browser.close();
 
-        // Return scraped data
         return res.status(200).json({
             message: "Scraping completed successfully!",
             profileData,
             postDetails,
         });
+
     } catch (error) {
         console.error("Scraping error:", error.message);
-        if (browser) await browser.close();
-        return res.status(500).json({ message: "Error scraping Instagram profile", error: error.message });
+        return res.status(500).json({ message: "Scraping error", error: error.message });
     }
 };
+
+
 
 
 module.exports.scrapeYouTubeChannel = async (req, res) => {
