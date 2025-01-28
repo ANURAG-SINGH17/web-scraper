@@ -1,6 +1,6 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-extra");
 
 // module.exports.scrapeInstagramProfile = async (req, res) => {
 //     const { profileUrl } = req.body;
@@ -109,7 +109,7 @@ module.exports.scrapeInstagramProfile = async (req, res) => {
     const browser = await puppeteer.launch({
         headless: "new", // Use 'new' for better compatibility
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(), // Set Render-compatible path
+        executablePath: "/usr/bin/chromium" // Correct path for Render
     });
 
     const page = await browser.newPage();
