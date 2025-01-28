@@ -120,7 +120,7 @@ module.exports.scrapeInstagramProfile = async (req, res) => {
                 "--disable-dev-shm-usage",
                 "--disable-accelerated-2d-canvas",
             ],
-            executablePath: process.env.CHROMIUM_PATH || require("puppeteer").executablePath(),
+            executablePath: require("puppeteer").executablePath(),
         });
 
         const page = await browser.newPage();
