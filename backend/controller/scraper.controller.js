@@ -1,8 +1,107 @@
-const puppeteer = require("puppeteer");
-const { saveToFile } = require("../utils/fileHandler");
 const config = require("../config/config");
 const axios = require('axios')
 const cheerio = require('cheerio')
+const puppeteer = require("puppeteer-extra");
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin()); // Bypass bot detection
+
+// module.exports.scrapeInstagramProfile = async (req, res) => {
+//     const { profileUrl } = req.body;
+//     if (!profileUrl) {
+//         return res.status(400).json({ message: "Please provide a valid Instagram profile URL." });
+//     }
+
+//     const browser = await puppeteer.launch({ 
+//         headless: config.headless,
+//         args: ['--no-sandbox', '--disable-setuid-sandbox']
+//     });
+//     const page = await browser.newPage();
+
+//     try {
+//         // Set a custom user agent to avoid bot detection
+//         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+
+//         // Disable image loading to avoid CORP errors
+//         await page.setRequestInterception(true);
+//         page.on('request', (request) => {
+//             if (request.resourceType() === 'image') {
+//                 request.abort(); // Cancel image requests
+//             } else {
+//                 request.continue(); // Continue other requests
+//             }
+//         });
+
+//         await page.goto(profileUrl, { timeout: config.timeout, waitUntil: 'domcontentloaded' });
+
+//         // Wait for profile header to load
+//         await page.waitForSelector("header section");
+
+//         // Scrape general profile data
+//         const profileData = await page.evaluate(() => {
+//             const getText = (selector) =>
+//                 document.querySelector(selector)?.textContent.trim() || "N/A";
+
+//             const followers = getText("header section ul li:nth-child(2) span");
+//             const following = getText("header section ul li:nth-child(3) span");
+//             const posts = getText("header section ul li:nth-child(1) span");
+
+//             return {
+//                 followers,
+//                 following,
+//                 posts,
+//             };
+//         });
+
+
+//         await page.evaluate(() => {
+//             window.scrollTo(0, document.body.scrollHeight);
+//         });
+
+//         // Alternative delay for older Puppeteer versions
+//         await new Promise(resolve => setTimeout(resolve, 3000));
+
+//         // Scrape details of the first few posts
+//         const postDetails = await page.evaluate(() => {
+//             const posts = [];
+//             const postElements = document.querySelectorAll("article a");
+
+//             postElements.forEach((post, index) => {
+//                 if (index < 5) { // Scrape only the first 5 posts
+//                     posts.push({
+//                         url: post.href,
+//                         image: post.querySelector("img")?.src || "N/A",
+//                         caption: post.querySelector("img")?.alt || "N/A",
+//                     });
+//                 }
+//             });
+
+//             return posts;
+//         });
+
+
+//         // Prepare scraped data
+//         const scrapedData = {
+//             profileUrl,
+//             ...profileData,
+//             posts: postDetails,
+//             scrapedAt: new Date().toISOString(),
+//         };
+
+//         // Send response as JSON
+//         return res.status(200).json({
+//             message: "Scraping completed successfully!",
+//             profileData: profileData,
+//             postDetails: postDetails,
+//         });
+
+//     } catch (error) {
+//         console.error("Error scraping Instagram profile:", error.message);
+//         return res.status(500).json({ message: "Error scraping Instagram profile", error: error.message });
+//     } finally {
+//         await browser.close();
+//     }
+// };
+
 
 module.exports.scrapeInstagramProfile = async (req, res) => {
     const { profileUrl } = req.body;
@@ -10,62 +109,63 @@ module.exports.scrapeInstagramProfile = async (req, res) => {
         return res.status(400).json({ message: "Please provide a valid Instagram profile URL." });
     }
 
-    const browser = await puppeteer.launch({ 
-        headless: config.headless,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    const page = await browser.newPage();
-
+    let browser;
     try {
-        // Set a custom user agent to avoid bot detection
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+        browser = await puppeteer.launch({
+            headless: "new", // Use 'new' mode for better stability on Render
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-gpu",
+                "--disable-dev-shm-usage",
+                "--disable-accelerated-2d-canvas",
+            ],
+            executablePath: process.env.CHROMIUM_PATH || require("puppeteer").executablePath(),
+        });
 
-        // Disable image loading to avoid CORP errors
+        const page = await browser.newPage();
+
+        // Set a custom user agent to avoid detection
+        await page.setUserAgent(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        );
+
+        // Block images and CSS to speed up loading
         await page.setRequestInterception(true);
-        page.on('request', (request) => {
-            if (request.resourceType() === 'image') {
-                request.abort(); // Cancel image requests
+        page.on("request", (request) => {
+            if (["image", "stylesheet", "font"].includes(request.resourceType())) {
+                request.abort();
             } else {
-                request.continue(); // Continue other requests
+                request.continue();
             }
         });
 
-        await page.goto(profileUrl, { timeout: config.timeout, waitUntil: 'domcontentloaded' });
+        await page.goto(profileUrl, { timeout: 60000, waitUntil: "domcontentloaded" });
 
-        // Wait for profile header to load
-        await page.waitForSelector("header section");
+        // Wait for profile section
+        await page.waitForSelector("header section", { timeout: 20000 });
 
-        // Scrape general profile data
+        // Scrape profile data
         const profileData = await page.evaluate(() => {
             const getText = (selector) =>
                 document.querySelector(selector)?.textContent.trim() || "N/A";
 
-            const followers = getText("header section ul li:nth-child(2) span");
-            const following = getText("header section ul li:nth-child(3) span");
-            const posts = getText("header section ul li:nth-child(1) span");
-
             return {
-                followers,
-                following,
-                posts,
+                followers: getText("header section ul li:nth-child(2) span"),
+                following: getText("header section ul li:nth-child(3) span"),
+                posts: getText("header section ul li:nth-child(1) span"),
             };
         });
 
+        // Scroll to load posts
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
 
-        await page.evaluate(() => {
-            window.scrollTo(0, document.body.scrollHeight);
-        });
-
-        // Alternative delay for older Puppeteer versions
-        await new Promise(resolve => setTimeout(resolve, 3000));
-
-        // Scrape details of the first few posts
+        // Scrape post details
         const postDetails = await page.evaluate(() => {
             const posts = [];
-            const postElements = document.querySelectorAll("article a");
-
-            postElements.forEach((post, index) => {
-                if (index < 5) { // Scrape only the first 5 posts
+            document.querySelectorAll("article a").forEach((post, index) => {
+                if (index < 5) {
                     posts.push({
                         url: post.href,
                         image: post.querySelector("img")?.src || "N/A",
@@ -73,33 +173,24 @@ module.exports.scrapeInstagramProfile = async (req, res) => {
                     });
                 }
             });
-
             return posts;
         });
 
+        await browser.close();
 
-        // Prepare scraped data
-        const scrapedData = {
-            profileUrl,
-            ...profileData,
-            posts: postDetails,
-            scrapedAt: new Date().toISOString(),
-        };
-
-        // Send response as JSON
+        // Return scraped data
         return res.status(200).json({
             message: "Scraping completed successfully!",
-            profileData: profileData,
-            postDetails: postDetails,
+            profileData,
+            postDetails,
         });
-
     } catch (error) {
-        console.error("Error scraping Instagram profile:", error.message);
+        console.error("Scraping error:", error.message);
+        if (browser) await browser.close();
         return res.status(500).json({ message: "Error scraping Instagram profile", error: error.message });
-    } finally {
-        await browser.close();
     }
 };
+
 
 module.exports.scrapeYouTubeChannel = async (req, res) => {
     const { channelUrl } = req.body;
